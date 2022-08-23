@@ -3,7 +3,7 @@ from main import views as main_views
 from django.conf import settings
 from django.urls import path, include
 
-from main.api.api import SucursalesLists, MovimientosLists
+from main.api.api import SucursalesLists, MovimientosLists, MovimientosDetails
 
 
 urlpatterns = [
@@ -20,6 +20,7 @@ urlpatterns = [
         MovimientosLists.as_view(),
         name="api_movimientos",
     ),
+    path("api/movimientos/<int:movimiento_id>/", MovimientosDetails.as_view()),
 ]
 
 if settings.DEBUG:
