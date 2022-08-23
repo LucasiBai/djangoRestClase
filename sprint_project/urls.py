@@ -8,6 +8,8 @@ from main.api.api import (
     MovimientosLists,
     MovimientosDetails,
     PrestamosListCliente,
+    PrestamosListSucursal,
+    api_root,
 )
 
 
@@ -31,6 +33,12 @@ urlpatterns = [
         PrestamosListCliente.as_view(),
         name="api_prestamos_list",
     ),
+    path(
+        "api/prestamos_sucursal/<int:sucursal_id>/",
+        PrestamosListSucursal.as_view(),
+        name="api_prestamos_sucursal",
+    ),
+    path("api/", api_root, name="api-root"),
 ]
 
 if settings.DEBUG:
