@@ -4,9 +4,11 @@ from datetime import date
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import permissions
 
 from main.api.serializers import SucursalesSerializer, MovimientosSerializer
 from main.models import Sucursales, Movimientos
+from main.permissions import esEmpleado
 
 
 # Create your views here.
@@ -20,6 +22,8 @@ class SucursalesLists(APIView):
 
 
 class MovimientosLists(APIView):
+    permission_classes = [permissions.IsAuthenticated, esEmpleado]
+
     def get(self, request):
         movimientos = Movimientos.objects.all()
         serializer = MovimientosSerializer(movimientos, many=True)
@@ -38,6 +42,8 @@ class MovimientosLists(APIView):
 
 
 class MovimientosDetails(APIView):
+    permission_classes = [permissions.IsAuthenticated, esEmpleado]
+
     def delete(self, request, movimiento_id):
         movimiento = Movimientos.objects.filter(pk=movimiento_id).first()
         if movimiento:
