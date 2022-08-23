@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from main.models import Sucursales, Movimientos
+from main.models import Sucursales, Movimientos, Prestamos
 
 
 class SucursalesSerializer(serializers.ModelSerializer):
@@ -15,3 +15,9 @@ class MovimientosSerializer(serializers.ModelSerializer):
         # indicamos que use todos los campos
         fields = "__all__"
         # les decimos cuales son los de solo lectura
+
+
+class PrestamosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prestamos
+        fields = "__all__"

@@ -6,8 +6,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from main.api.serializers import SucursalesSerializer, MovimientosSerializer
-from main.models import Sucursales, Movimientos
+from main.api.serializers import (
+    SucursalesSerializer,
+    MovimientosSerializer,
+    PrestamosSerializer,
+)
+from main.models import Sucursales, Movimientos, Prestamos, ids
 from main.permissions import esEmpleado
 
 
@@ -59,3 +63,32 @@ class MovimientosDetails(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PrestamosListCliente(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, cliente_id):
+        # podemos chequear que un cliente solo haga GET para sus propios prestamos
+        username = request.user
+        owner = cliente_id
+        try:
+            user = ids.objects.filter(username=username).first()
+            dni = user.cliente_id
+        except:
+            dni = -1
+        if dni == owner or user.tipo == "empleado":
+
+            prestamos = Prestamos.objects.filter(cliente_id=cliente_id)
+            serializer = PrestamosSerializer(prestamos, many=True)
+            if prestamos:
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    "no hay prestamos asociados a este cliente",
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+        else:
+            return Response(
+                "no coincide el dni ni es empleado", status=status.HTTP_404_NOT_FOUND
+            )
