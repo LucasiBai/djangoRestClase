@@ -3,7 +3,7 @@ from main import views as main_views
 from django.conf import settings
 from django.urls import path, include
 
-from main.api.api import SucursalesLists
+from main.api.api import SucursalesLists, MovimientosLists
 
 
 urlpatterns = [
@@ -15,6 +15,11 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/registro", main_views.registro, name="registro"),
     path("api/sucursales/", SucursalesLists.as_view(), name="api_sucursales"),
+    path(
+        "api/movimientos/",
+        MovimientosLists.as_view(),
+        name="api_movimientos",
+    ),
 ]
 
 if settings.DEBUG:
